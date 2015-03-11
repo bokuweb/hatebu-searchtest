@@ -4,13 +4,17 @@
 
   tanaApp = angular.module('tanaApp', ['ngResource', 'ngAnimate', 'ngSanitize']);
 
-  tanaApp.controller('MainCtrl', function($scope, $resource) {
+  tanaApp.config([
+    '$httpProvider', function($httpProvider) {
+      $httpProvider.defaults.useXDomain = true;
+      $httpProvider.defaults.withCredentials = true;
+      return delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    }
+  ]);
+
+  tanaApp.controller('MainCtrl', function($scope, $resource, $http) {
     var bookmark;
-    bookmark = $resource("http://b.hatena.ne.jp/bokuweb/search/json", {}, {
-      method: 'GET',
-      isArray: false,
-      withCredentials: true
-    });
+    bookmark = $resource("http://b.hatena.ne.jp/bokuweb/search/json");
     return $scope.bookmark = bookmark.query();
   });
 
