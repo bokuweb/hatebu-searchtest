@@ -2,19 +2,20 @@
 (function() {
   var tanaApp;
 
-  tanaApp = angular.module('tanaApp', ['ngResource', 'ngAnimate', 'ngSanitize']);
+  tanaApp = angular.module('tanaApp', ['ngResource', 'ngCookies']);
 
-  tanaApp.config([
-    '$httpProvider', function($httpProvider) {
-      $httpProvider.defaults.useXDomain = true;
-      $httpProvider.defaults.withCredentials = true;
-      return delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    }
-  ]);
+  tanaApp.config(function ($httpProvider) {
+    $httpProvider.defaults.withCredentials = true;
+  });
 
-  tanaApp.controller('MainCtrl', function($scope, $resource, $http) {
-    var bookmark;
-    bookmark = $resource("http://b.hatena.ne.jp/bokuweb/search/json");
+  tanaApp.controller('MainCtrl', function($scope, $resource, $http, $cookies) {
+    var bookmark, headers;
+    console.dir($cookies);
+    $http.defaults.useXDomain = true;
+    bookmark = $resource("http://b.hatena.ne.jp/bokuweb/search/json", {}, {
+      method: "GET",
+      withCredentials: true
+    });
     return $scope.bookmark = bookmark.query();
   });
 
